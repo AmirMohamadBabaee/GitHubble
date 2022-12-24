@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        .flex_container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        div.main_box {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f1f1f1;
+            width: 80%;
+            height: 80%;
+            max-width: 750px;
+            max-height: 500px;
+            margin: 10em;
+            border-style: solid;
+            border-color: #b40a0a;
+            border-width: 1px;
+        }
+
+        .inner_box {
+            background-color: white;
+            border-style: solid;
+            border-radius: 25px;
+            border-color: black;
+            border-width: 2px;
+            font-size: 30px;
+            height: 80%;
+            max-height: 300px;
+        }
+
+        div.profile_box {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            width: 50%;
+            margin-right: 2.5%;
+        }
+
+        div.search_box {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 20%;
+            margin-left: 2.5%;
+        }
+
+        .form-style {
+            display: inline-block;
+            text-align: center;
+        }
+
+        .text-field {
+            width: 80%;
+            border-radius: 2px;
+        }
+
+        .submit-button {
+            width: 80%;
+            margin-top: 20%;
+            background-color: white;
+            border-radius: 2px;
+            border-color: black;
+        }
+    </style>
+    <title>My GitHub</title>
+</head>
+<body>
+    <div class="flex_container">
+        <div class="main_box">
+            <div class="profile_box inner_box">
+                <div class="profile_top">
+                    <img src="" alt="Profile Picture">
+                    <div class="user_info">
+                        
+                    </div>
+                </div>
+                <div class="profile_bottom">
+                    hell
+                </div>
+            </div>
+            <div class="search_box inner_box">
+                <form class="form-style" action="" method="post">
+                    <input class="text-field" type="text" name="text_field" id="text_field" placeholder="Username">
+                    <input class="submit-button" type="submit" value="submit">
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
