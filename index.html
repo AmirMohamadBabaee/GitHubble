@@ -10,7 +10,28 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            flex-direction: column;
             height: 100vh;
+        }
+
+        div.notification {
+            width: 80%;
+            height: 20%;
+            max-width: 800px;
+            max-height: 50px;
+            border-radius: 20px;
+            border-style: solid;
+            border-color: black;
+            border-width: 2px;
+        }
+
+        p.text-notification {
+            margin-left: 3%;
+        }
+
+        div.error {
+            background-color: rgba(255, 0, 0, 0.4);
+            border-color: #010101;
         }
 
         div.main_box {
@@ -22,7 +43,7 @@
             height: 80%;
             max-width: 800px;
             max-height: 500px;
-            margin: 10em;
+            margin: 1em;
             border-style: solid;
             border-color: #b40a0a;
             border-width: 1px;
@@ -137,6 +158,11 @@
 </head>
 <body>
     <div class="flex_container">
+        <div class="notification error">
+            <p class="text-notification">
+                Oops! an error ocurred!
+            </p>
+        </div>
         <div class="main_box">
             <div class="profile_box inner_box">
                 <div class="profile_top">
