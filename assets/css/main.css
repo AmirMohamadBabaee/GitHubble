@@ -199,9 +199,18 @@ text field element styles
 */
 .text-field {
     width: 80%;
-    border-radius: 2px;
-    padding: 5px 15px;
+    border-radius: 10px;
+    padding: 10px 15px;
     box-sizing: border-box;
+    font-family: 'Segoe UI';
+}
+
+/* 
+text field class styles when focus goes on this element
+*/
+.text-field:focus {
+    outline: none;
+    border: 2px solid blue;
 }
 
 /* 
@@ -215,6 +224,7 @@ submit button styles
     background-color: white;
     padding: 10px 10px;
     text-decoration: none;
+    font-family: 'Segoe UI';
     cursor: pointer;
 }
 
