@@ -10,7 +10,9 @@ try to use all of the hight that is visible in screen
     height: 100vh;
 }
 
-
+/* 
+define notification block to use for notifying
+*/
 div.notification {
     width: 80%;
     height: 20%;
@@ -22,15 +24,26 @@ div.notification {
     border-width: 2px;
 }
 
+/* 
+define style of text in notification block
+*/
 p.text-notification {
     margin-left: 3%;
+    font-size: 1em;
 }
 
+/* 
+specify background color and border color of notification block when error ocurred.
+*/
 div.error {
     background-color: rgba(255, 0, 0, 0.4);
     border-color: #010101;
 }
 
+/* 
+specify main block of of that contain info and search box
+items in this block are justified as center and border has a curvy style
+*/
 div.main_box {
     display: flex;
     justify-content: center;
@@ -46,6 +59,10 @@ div.main_box {
     border-width: 1px;
 }
 
+/* 
+define style of inner boxes in main box. they have white background color and 
+have curvy style border
+*/
 .inner_box {
     background-color: white;
     border-style: solid;
@@ -57,14 +74,22 @@ div.main_box {
     max-height: 300px;
 }
 
+/* 
+Styles of profile box that has information about GitHub user. The block
+has flex display and items has arranged in column order
+*/
 div.profile_box {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    width: 50%;
+    width: 60%;
     margin-right: 2.5%;
 }
 
+/* 
+styles of top of profile box section. In this section, profile picture and user information except 
+user bio will be appear 
+*/
 div.profile_top {
     display: flex;
     justify-content: flex-start;
@@ -72,6 +97,9 @@ div.profile_top {
     height: 60%;
 }
 
+/* 
+Styles of profile picture. The profile picture is in circle style 
+*/
 img.profile_image {
     width: auto;
     height: auto;
@@ -79,10 +107,14 @@ img.profile_image {
     max-height: 70%;
     margin-left: 10%;
     margin-right: 5%;
-    border-radius: 90px;
+    border-radius: 50%;
     border-style: none;
 }
 
+/* 
+This block contains user information except user bio and has flex display in 
+column direction.
+*/
 div.user_info {
     display: flex;
     justify-content: center;
@@ -91,62 +123,104 @@ div.user_info {
     height: 100%;
 }
 
+/* 
+Styles of user information text to align them to center
+*/
 .user_info_par {
     text-align: center;
     margin-top: 2.5%;
     margin-bottom: 2.5%;
 }
 
+/* 
+Specific styles of the GitHub name of the user like font-family, font-size and make it bold
+*/
 p.gh-name {
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 1.3rem;
+    font-size: 0.6em;
     font-weight: bold;
 }
 
+/* 
+Specific styles of the GitHub email of the user like font-family, font-size
+*/
 p.gh-email {
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 0.7rem;
+    font-size: 0.4em;
 }
 
+/* 
+Specific styles of GitHub location of the user like font-family, font-size
+*/
 p.gh-location {
     font-family: "Lucida Console", "Courier New", monospace;
-    font-size: 1.1rem;
+    font-size: 0.5em;
 }
 
+/* 
+Specific styles of GitHub user bio block
+*/
 div.profile_bio_block {
     height: 30%;
 }
 
+/* 
+Specific styles of GitHub user bio paragraph like font-family and font-size
+*/
 pre.profile_bio {
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 1rem;
+    font-size: 0.5em;
     margin-left: 5%;
     margin-right: 5%;
 }
 
+/* 
+Styles of search box block. It has flex display and column direction and items are justified as 
+center
+*/
 div.search_box {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 20%;
+    width: 25%;
     margin-left: 2.5%;
 }
 
+/* 
+Styles of form div that has input elements
+*/
 .form-style {
-    display: inline-block;
     text-align: center;
 }
 
+/* 
+text field element styles
+*/
 .text-field {
     width: 80%;
     border-radius: 2px;
+    padding: 5px 15px;
+    box-sizing: border-box;
 }
 
+/* 
+submit button styles
+*/
 .submit-button {
     width: 80%;
-    margin-top: 20%;
-    background-color: white;
-    border-radius: 2px;
+    margin-top: 10%;
+    border-radius: 10px;
     border-color: black;
+    background-color: white;
+    padding: 10px 10px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* 
+submit button styles after hovering over it
+*/
+.submit-button:hover {
+    background-color: #f5f5f5;
 }
