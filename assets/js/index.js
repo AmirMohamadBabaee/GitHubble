@@ -34,7 +34,7 @@ async function get_gh_info(username) {
         return json_data;
     })
     .catch((error) => {
-        show_error_notification(`${error}`);
+        show_notification(`${error}`, 'error');
     })
 
     return result;
@@ -43,17 +43,18 @@ async function get_gh_info(username) {
 /**
  * function to show error notification
  * 
- * @param {string} err_message 
+ * @param {string} message 
+ * @param {string} class_type
  */
-function show_error_notification(err_message) {
+function show_notification(message_text, class_type) {
 
     // check if there is an error notification, first remove it
     // then add new error notification
-    remove_error_notification()
+    remove_notification();
 
     // create div block for notification
     const div_block = document.createElement("div");
-    div_block.className = "notification error";
+    div_block.className = `notification ${class_type}`;
     div_block.id = "notification";
 
     // create paragraph element to embed the text notification
@@ -62,23 +63,24 @@ function show_error_notification(err_message) {
     div_block.appendChild(paragraph);
 
     // create message text based on error message
-    const message = document.createTextNode(`${err_message}`);
+    const message = document.createTextNode(message_text);
     paragraph.appendChild(message);
 
     // add new element block before main-box element
     let main_container = document.getElementById("main-container");
     let main_box = document.getElementById("main-box");
     main_container.insertBefore(div_block, main_box);
+
 }
 
 /**
  * function to remove error notification if any exists
  */
-function remove_error_notification() {
+function remove_notification() {
 
     const notification_block = document.getElementById("notification");
 
-    if ( notification_block !== null) {
+    if (notification_block !== null) {
         notification_block.remove();
     }
 }
@@ -108,7 +110,7 @@ function update_info(gh_info) {
 
     // Update name
     if (name) {    
-        if (Object.hasOwn(gh_info, "name") & gh_info.name !== null) {
+        if (Object.hasOwn(gh_info, "name") & (gh_info.name !== null & gh_info.name !== '')) {
             name.innerText = gh_info.name;
         } else {
             // user does not have any name
@@ -117,7 +119,7 @@ function update_info(gh_info) {
 
     // Update blog
     if (blog) {    
-        if (Object.hasOwn(gh_info, "blog") & gh_info.blog !== null) {
+        if (Object.hasOwn(gh_info, "blog") & (gh_info.blog !== null & gh_info.blog !== '')) {
             blog.innerText = gh_info.blog;
         } else {
             // user does not have any blog
@@ -126,7 +128,7 @@ function update_info(gh_info) {
 
     // Update location
     if (location) {    
-        if (Object.hasOwn(gh_info, "location") & gh_info.location !== null) {
+        if (Object.hasOwn(gh_info, "location") & (gh_info.location !== null & gh_info.location !== '')) {
             location.innerText = gh_info.location;
         } else {
             // user does not have any location
@@ -135,7 +137,7 @@ function update_info(gh_info) {
 
     // Update bio
     if (bio) {
-        if (Object.hasOwn(gh_info, "bio") & gh_info.bio !== null) {
+        if (Object.hasOwn(gh_info, "bio") & (gh_info.bio !== null & gh_info.bio !== '')) {
             bio.innerText = gh_info.bio;
         } else {
             // user does not have any bio
@@ -156,8 +158,16 @@ async function submit_action() {
     let username = text_field.value;
 
     try {
-        let result = await get_gh_info(username)
-        update_info(result)
+        let cache_result = load_from_local_storage(username);
+        if (cache_result !== null) {
+            update_info(cache_result);
+            show_notification(`\"${username}\" found in LocalStorage`, 'info');
+
+        } else {
+            let result = await get_gh_info(username);
+            cache_in_local_storage(result);
+            update_info(result);
+        }
         submit.innerText = "submit"
 
     } catch (error) {
@@ -165,5 +175,60 @@ async function submit_action() {
     }
 }
 
+
+/**
+ * function to handle submit when entering on text field
+ * @param {Event} e 
+ */
+function search(e) {
+    e = e || window.event;
+    if (e.keyCode == 13) {
+        console.log('Enter...');
+        submit_action();
+    }
+}
+
+/**
+ * Cache Github user information in LocalStorage
+ * 
+ * @param {Object} api_result 
+ */
+function cache_in_local_storage(api_result) {
+    
+    let username = api_result.login ? api_result.login : "";
+    if (localStorage.getItem(username) === null) {
+        localStorage.setItem(`${username}`, 'active');
+        localStorage.setItem(`${username}_avatar_url`, `${api_result.avatar_url !== null ? api_result.avatar_url : '-'}`);
+        localStorage.setItem(`${username}_name`, `${api_result.name !== null ? api_result.name : '-'}`);
+        localStorage.setItem(`${username}_blog`, `${api_result.blog !== null ? api_result.blog : '-'}`);
+        localStorage.setItem(`${username}_location`, `${api_result.location !== null ? api_result.location : '-'}`);
+        localStorage.setItem(`${username}_bio`, `${api_result.bio !== null ? api_result.bio : '-'}`);
+    }
+}
+
+/**
+ * function to load data from LocalStorage
+ * 
+ * @param {String} username 
+ * @returns Object | null
+ */
+function load_from_local_storage(username) {
+    let result = null;
+
+    if (localStorage.getItem(username) !== null) {
+        result = {
+            'avatar_url': localStorage.getItem(`${username}_avatar_url`),
+            'name'      : localStorage.getItem(`${username}_name`),
+            'blog'      : localStorage.getItem(`${username}_blog`),
+            'location'  : localStorage.getItem(`${username}_location`),
+            'bio'       : localStorage.getItem(`${username}_bio`)
+        }
+    }
+
+    return result
+}
+
 const submit_button = document.getElementById("submit");
+const text_field = document.getElementById("text-field");
 submit_button.addEventListener('click', () => {submit_action()});
+text_field.addEventListener('keydown', (e) => {search(e)})
