@@ -10,43 +10,41 @@
     <title>My GitHub</title>
 </head>
 <body>
-    <div class="flex_container">
-        <div class="notification error">
-            <p class="text-notification">
-                Oops! an error ocurred!
-            </p>
-        </div>
-        <div class="main_box">
+    <div id="main-container" class="flex_container">
+        <div id="main-box" class="main_box">
             <div class="profile_box inner_box">
                 <div class="profile_top">
-                    <img class="profile_image" src="https://picsum.photos/200" alt="Profile Picture">
+                    <img id="profile-picture" class="profile_image" src="https://picsum.photos/200" alt="Profile Picture">
                     <div class="user_info">
-                        <p class="user_info_par gh-name">
+                        <p id="name" class="user_info_par gh-name">
                             AmirMohammad Babaei
                         </p>
-                        <p class="user_info_par gh-email">
+                        <p id="blog" class="user_info_par gh-blog">
                             amirmohammad.babaei79@gmail.com
                         </p>
-                        <p class="user_info_par gh-location">
+                        <p id="location" class="user_info_par gh-location">
                             Tehran, Iran
                         </p>
                     </div>
                 </div>
                 <div class="profile_bio_block">
-                    <pre class="profile_bio">
+                    <pre id="bio" class="profile_bio">
 HTML, CSS, JS
                     </pre>
                 </div>
             </div>
             <div class="search_box inner_box">
                 <div class="form-style">
-                    <input class="text-field" type="text" name="text_field" id="text_field" placeholder="Username">
-                    <input class="submit-button" type="submit" value="submit">
+                    <input id="text-field" class="text-field" type="text" name="text_field" id="text_field" placeholder="Username">
+                    <button id="submit" class="submit-button" type="submit">
+                        submit
+                    </button>
                 </div>
             </div>
         </div>
     </div>
-
     
+
+    <script src="assets/js/main.js"></script>
 </body>
 </html>
