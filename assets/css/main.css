@@ -142,11 +142,11 @@ p.gh-name {
 }
 
 /* 
-Specific styles of the GitHub email of the user like font-family, font-size
+Specific styles of the GitHub blog of the user like font-family, font-size
 */
-p.gh-email {
+p.gh-blog {
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 0.4em;
+    font-size: 0.5em;
 }
 
 /* 
@@ -165,6 +165,18 @@ div.profile_bio_block {
 }
 
 /* 
+Add wrapping words to pre tag
+https://stackoverflow.com/a/248013/19718207
+*/
+pre {
+    white-space: pre-wrap;       /* Since CSS 2.1 */
+    white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+    white-space: -pre-wrap;      /* Opera 4-6 */
+    white-space: -o-pre-wrap;    /* Opera 7 */
+    word-wrap: break-word;       /* Internet Explorer 5.5+ */
+}
+
+/* 
 Specific styles of GitHub user bio paragraph like font-family and font-size
 */
 pre.profile_bio {
@@ -172,6 +184,7 @@ pre.profile_bio {
     font-size: 0.5em;
     margin-left: 5%;
     margin-right: 5%;
+    word-wrap: normal;
 }
 
 /* 
@@ -233,4 +246,9 @@ submit button styles after hovering over it
 */
 .submit-button:hover {
     background-color: #f5f5f5;
+}
+
+#loading-svg {
+    width: 15%;
+    height: 15%;
 }
