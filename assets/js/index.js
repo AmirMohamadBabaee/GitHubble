@@ -62,6 +62,12 @@ function show_notification(message_text, class_type) {
     paragraph.className = "text-notification";
     div_block.appendChild(paragraph);
 
+    const close_button = document.createElement("span");
+    close_button.id = 'close-notification';
+    close_button.innerHTML = 'X';
+    close_button.addEventListener('click', () => {div_block.remove();});
+    div_block.appendChild(close_button);
+
     // create message text based on error message
     const message = document.createTextNode(message_text);
     paragraph.appendChild(message);
@@ -158,6 +164,8 @@ async function submit_action() {
     let username = text_field.value;
 
     try {
+        remove_notification()
+
         let cache_result = load_from_local_storage(username);
         if (cache_result !== null) {
             update_info(cache_result);
@@ -195,7 +203,7 @@ function search(e) {
  */
 function cache_in_local_storage(api_result) {
     
-    let username = api_result.login ? api_result.login : "";
+    let username = api_result.login ? api_result.login.toLowerCase() : "";
     if (localStorage.getItem(username) === null) {
         localStorage.setItem(`${username}`, 'active');
         localStorage.setItem(`${username}_avatar_url`, `${api_result.avatar_url !== null ? api_result.avatar_url : '-'}`);
@@ -215,19 +223,21 @@ function cache_in_local_storage(api_result) {
 function load_from_local_storage(username) {
     let result = null;
 
-    if (localStorage.getItem(username) !== null) {
+    lower_username = username.toLowerCase()
+    if (localStorage.getItem(lower_username) !== null) {
         result = {
-            'avatar_url': localStorage.getItem(`${username}_avatar_url`),
-            'name'      : localStorage.getItem(`${username}_name`),
-            'blog'      : localStorage.getItem(`${username}_blog`),
-            'location'  : localStorage.getItem(`${username}_location`),
-            'bio'       : localStorage.getItem(`${username}_bio`)
+            'avatar_url': localStorage.getItem(`${lower_username}_avatar_url`),
+            'name'      : localStorage.getItem(`${lower_username}_name`),
+            'blog'      : localStorage.getItem(`${lower_username}_blog`),
+            'location'  : localStorage.getItem(`${lower_username}_location`),
+            'bio'       : localStorage.getItem(`${lower_username}_bio`)
         }
     }
 
     return result
 }
 
+// add event listener on textfield and submit button
 const submit_button = document.getElementById("submit");
 const text_field = document.getElementById("text-field");
 submit_button.addEventListener('click', () => {submit_action()});
