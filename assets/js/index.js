@@ -15,6 +15,37 @@ viewBox="0 0 100 100" enable-background="new 0 0 0 0" xml:space="preserve">
 </svg>`
 
 /**
+ * find the most frequent string element in the array
+ * https://stackoverflow.com/a/3451640/19718207
+ * 
+ * @param {string} array 
+ * @returns 
+ */
+function modeString(array) {
+    if (array.length == 0) return null;
+  
+    var modeMap = {},
+      maxEl = array[0],
+      maxCount = 1;
+  
+    for (var i = 0; i < array.length; i++) {
+      var el = array[i];
+  
+      if (modeMap[el] == null) modeMap[el] = 1;
+      else modeMap[el]++;
+  
+      if (modeMap[el] > maxCount) {
+        maxEl = el;
+        maxCount = modeMap[el];
+      } else if (modeMap[el] == maxCount) {
+        maxEl += " & " + el;
+        maxCount = modeMap[el];
+      }
+    }
+    return maxEl;
+  }
+
+/**
  * function to get GitHub username and return user information details
  * 
  * @param {string} username 
@@ -22,8 +53,10 @@ viewBox="0 0 100 100" enable-background="new 0 0 0 0" xml:space="preserve">
  */
 async function get_gh_info(username) {
 
-    let final_url = `${GITHUB_API_URL}${username}`
-    let result = await fetch(final_url)
+    let final_info_url = `${GITHUB_API_URL}${username}`
+    let final_public_repo_url = `${GITHUB_API_URL}${username}/repos?sort=pushed`
+
+    let info_result = await fetch(final_info_url)
     .then((response) => {
         if (!response.ok) {
             throw new Error('There something wrong! Please try again.');
@@ -37,7 +70,69 @@ async function get_gh_info(username) {
         show_notification(`${error}`, 'error');
     })
 
-    return result;
+    let public_repo_list = await fetch(final_public_repo_url)
+    .then((response) => {
+        if (!response.ok) {
+            throw new Error('There something wrong! Please try again.');
+        }
+        return response.json();
+    })
+    .then((json_data) => {
+        if (json_data.length < 5) {
+            throw new Error('There something wrong! Please try again.');
+        }
+        return json_data;
+    })
+    .catch((error) => {
+        show_notification(`${error}`, 'error');
+    })
+
+    let language_url_list = public_repo_list.slice(0, 5).map(x => x.languages_url);
+    let lang_list = public_repo_list.slice(0, 5).map(x => x.language);
+
+    langs_object = {}
+    for (i=0 ; i < language_url_list.length ; i++) {
+        res = await fetch(language_url_list[i])
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error('There something wrong! Please try again.');
+            }
+            return response.json();
+        })
+        .then((json_data) => {
+            if (json_data.length < 5) {
+                throw new Error('There something wrong! Please try again.');
+            }
+            return json_data;
+        })
+        .catch((error) => {
+            show_notification(`${error}`, 'error');
+        })
+        console.log(`lang_list = ${lang_list}`);
+        console.log(`result = ${res}`);
+
+        for (let key in res) {
+            console.log(key);
+            if (Object.hasOwn(langs_object, key)) {
+                langs_object[key] += res[key];
+            } else {
+                langs_object[key] = res[key];
+            }
+        }
+    }
+
+    let best_score = -1;
+    let fav_lang = '';
+    for (let key in langs_object) {
+        if (langs_object[key] > best_score) {
+            best_score = langs_object[key];
+            fav_lang = key;
+        }
+    }
+    console.log(langs_object);
+    info_result.fav_lang = fav_lang;
+
+    return info_result;
 }
 
 /**
@@ -103,6 +198,7 @@ function update_info(gh_info) {
     let blog           = document.getElementById("blog");
     let location        = document.getElementById("location");
     let bio             = document.getElementById("bio");
+    let fav_lang        = document.getElementById("fav-lang");
 
     // Update profile-picture
     if (profile_picture) {    
@@ -120,7 +216,7 @@ function update_info(gh_info) {
             name.innerText = gh_info.name;
         } else {
             // user does not have any name
-            name.innerText = "-";
+            name.innerText = "";
         }}
 
     // Update blog
@@ -129,7 +225,7 @@ function update_info(gh_info) {
             blog.innerText = gh_info.blog;
         } else {
             // user does not have any blog
-            blog.innerText = "-";
+            blog.innerText = "";
         }}
 
     // Update location
@@ -138,7 +234,7 @@ function update_info(gh_info) {
             location.innerText = gh_info.location;
         } else {
             // user does not have any location
-            location.innerText = "-";
+            location.innerText = "";
         }}
 
     // Update bio
@@ -147,9 +243,18 @@ function update_info(gh_info) {
             bio.innerText = gh_info.bio;
         } else {
             // user does not have any bio
-            bio.innerText = "-";
+            bio.innerText = "";
         }
     }
+
+    // Update fav_lang
+    if (fav_lang) {    
+        if (Object.hasOwn(gh_info, "fav_lang") & (gh_info.fav_lang !== null & gh_info.fav_lang !== '')) {
+            fav_lang.innerText = gh_info.fav_lang;
+        } else {
+            // user does not have any fav_lang
+            fav_lang.innerText = "";
+        }}
 }
 
 /**
@@ -206,11 +311,12 @@ function cache_in_local_storage(api_result) {
     let username = api_result.login ? api_result.login.toLowerCase() : "";
     if (localStorage.getItem(username) === null) {
         localStorage.setItem(`${username}`, 'active');
-        localStorage.setItem(`${username}_avatar_url`, `${api_result.avatar_url !== null ? api_result.avatar_url : '-'}`);
-        localStorage.setItem(`${username}_name`, `${api_result.name !== null ? api_result.name : '-'}`);
-        localStorage.setItem(`${username}_blog`, `${api_result.blog !== null ? api_result.blog : '-'}`);
-        localStorage.setItem(`${username}_location`, `${api_result.location !== null ? api_result.location : '-'}`);
-        localStorage.setItem(`${username}_bio`, `${api_result.bio !== null ? api_result.bio : '-'}`);
+        localStorage.setItem(`${username}_avatar_url`, `${api_result.avatar_url !== null ? api_result.avatar_url : ''}`);
+        localStorage.setItem(`${username}_name`, `${api_result.name !== null ? api_result.name : ''}`);
+        localStorage.setItem(`${username}_blog`, `${api_result.blog !== null ? api_result.blog : ''}`);
+        localStorage.setItem(`${username}_location`, `${api_result.location !== null ? api_result.location : ''}`);
+        localStorage.setItem(`${username}_bio`, `${api_result.bio !== null ? api_result.bio : ''}`);
+        localStorage.setItem(`${username}_fav_lang`, `${api_result.fav_lang !== null ? api_result.fav_lang : ''}`);
     }
 }
 
@@ -230,7 +336,8 @@ function load_from_local_storage(username) {
             'name'      : localStorage.getItem(`${lower_username}_name`),
             'blog'      : localStorage.getItem(`${lower_username}_blog`),
             'location'  : localStorage.getItem(`${lower_username}_location`),
-            'bio'       : localStorage.getItem(`${lower_username}_bio`)
+            'bio'       : localStorage.getItem(`${lower_username}_bio`),
+            'fav_lang'  : localStorage.getItem(`${lower_username}_fav_lang`),
         }
     }
 
